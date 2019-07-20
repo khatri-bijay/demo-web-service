@@ -5,12 +5,13 @@ import com.intuit.presentationdemo.common.ApiResponse;
 import com.intuit.presentationdemo.common.validator.PetValidator;
 import com.intuit.presentationdemo.dto.command.PetCommand;
 import com.intuit.presentationdemo.dto.query.PetQuery;
+import com.intuit.presentationdemo.dto.query.VetQuery;
 import com.intuit.presentationdemo.service.contract.PetService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("pets")
@@ -28,5 +29,22 @@ public class PetsController {
         }
         PetQuery pet = petService.addPet(petCommand);
         return ResponseEntity.ok(new ApiResponse<>(pet));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ApiResponse<List<PetQuery>>> getPets() {
+        PetQuery p1 = new PetQuery();
+        p1.setName("DOG1");
+        p1.setId(1);
+
+        PetQuery p2 = new PetQuery();
+        p2.setName("CAT1");
+        p2.setId(2);
+
+        List<PetQuery> res = new ArrayList<>();
+        res.add(p1);
+        res.add(p2);
+
+        return ResponseEntity.ok(new ApiResponse<>(res));
     }
 }

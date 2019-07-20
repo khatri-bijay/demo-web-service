@@ -7,10 +7,9 @@ import com.intuit.presentationdemo.dto.command.VetCommand;
 import com.intuit.presentationdemo.dto.query.VetQuery;
 import com.intuit.presentationdemo.service.contract.VetService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/vets")
@@ -28,5 +27,17 @@ public class VetsController {
         }
         VetQuery vet = vetService.addVet(command);
         return ResponseEntity.ok(new ApiResponse<>(vet));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ApiResponse<Set<VetQuery>>> getVets(@RequestParam(required = false) String specialty) {
+        Set<VetQuery> response = new HashSet<>();
+        if(specialty == null || specialty.trim().isEmpty()){
+            response = vetService.findAll();
+        }else{
+            response = vetService.findAllByType(specialty);
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(response));
     }
 }

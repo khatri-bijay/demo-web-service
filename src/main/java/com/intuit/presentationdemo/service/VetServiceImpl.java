@@ -49,6 +49,30 @@ public class VetServiceImpl implements VetService {
         return ModelMapperUtil.toVetQuery(vetRepository.save(vet));
     }
 
+    @Override
+    public Set<VetQuery> findAll() {
+        Iterable<Vet> vets = vetRepository.findAll();
+        return buildVetQueries(vets);
+
+    }
+
+    private Set<VetQuery> buildVetQueries(Iterable<Vet> vets) {
+        return Collections.unmodifiableSet(StreamSupport.stream(vets.spliterator(), true) // Collection mapper ?
+                .map(ModelMapperUtil::toVetQuery)
+                .collect(Collectors.toSet()));
+    }
+
+    @Override
+    public Set<VetQuery> findAllByType(String specialty) {
+        Optional<Set<Vet>> vets = vetRepository.findAllBySpecialty(specialty);
+        if(vets.isPresent()) {
+            return Collections.emptySet();
+        }
+        return buildVetQueries(vets.get());
+
+
+    }
+
     private Set<Specialty> verifySpecialties(VetCommand vetCommand) {
         Set<Specialty> specialtySet = new HashSet<>();
         vetCommand.getSpecialties().forEach(
