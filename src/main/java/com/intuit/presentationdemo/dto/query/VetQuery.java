@@ -12,5 +12,5 @@ import java.util.Set;
 public class VetQuery {
     private long id;
     private String name;
-    private Set<SpecialtyQuery> specialties;
+    private SpecialtyQuery specialty;
 }

@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,10 +42,11 @@ public class VetServiceImpl implements VetService {
 
     @Override
     public VetQuery addVet(VetCommand vetCommand) {
-        Set<Specialty> specialtySet = verifySpecialties(vetCommand);
+        Specialty specialty = verifySpecialty(vetCommand.getSpecialty());
         Vet vet = ModelMapperUtil.toVet(vetCommand);
-        vet.setSpecialties(specialtySet);
-        return ModelMapperUtil.toVetQuery(vetRepository.save(vet));
+        vet.setSpecialty(specialty);
+        Vet newVet = vetRepository.save(vet);
+        return ModelMapperUtil.toVetQuery(newVet);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class VetServiceImpl implements VetService {
 
     @Override
     public Set<VetQuery> findAllByType(String specialty) {
-        Optional<Set<Vet>> vets = vetRepository.findAllBySpecialty(specialty);
+        Optional<Set<Vet>> vets = vetRepository.findBySpecialty(specialty);
         if(vets.isPresent()) {
             return Collections.emptySet();
         }
@@ -73,18 +73,12 @@ public class VetServiceImpl implements VetService {
 
     }
 
-    private Set<Specialty> verifySpecialties(VetCommand vetCommand) {
-        Set<Specialty> specialtySet = new HashSet<>();
-        vetCommand.getSpecialties().forEach(
-                s -> {
-                    final Optional<Specialty> specialty = specialtyRepository.findByNameIgnoreCase(s.getName());
-                    if(!specialty.isPresent()) {
-                        throw new ApiException(HttpStatus.BAD_REQUEST, ApiConstant.CLIENT_INPUT_ERROR,ApiConstant.CLIENT_INPUT_SPECIALTY_MESSAGE);
-                        //TODO: One could argue, this is a internal server exception ??
-                    }
-                    specialtySet.add(specialty.get());
-                }
-        );
-        return specialtySet;
+    private Specialty verifySpecialty(VetCommand.SpecialtyCommand s) {
+        final Optional<Specialty> specialty = specialtyRepository.findByNameIgnoreCase(s.getName());
+        if(!specialty.isPresent()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, ApiConstant.CLIENT_INPUT_ERROR,ApiConstant.CLIENT_INPUT_SPECIALTY_MESSAGE);
+            //TODO: One could argue, this is a internal server exception ??
+        }
+        return specialty.get();
     }
 }

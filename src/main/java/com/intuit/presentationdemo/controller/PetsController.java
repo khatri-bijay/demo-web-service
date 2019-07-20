@@ -5,13 +5,12 @@ import com.intuit.presentationdemo.common.ApiResponse;
 import com.intuit.presentationdemo.common.validator.PetValidator;
 import com.intuit.presentationdemo.dto.command.PetCommand;
 import com.intuit.presentationdemo.dto.query.PetQuery;
-import com.intuit.presentationdemo.dto.query.VetQuery;
 import com.intuit.presentationdemo.service.contract.PetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping("pets")
@@ -22,29 +21,18 @@ public class PetsController {
         this.petService = petService;
     }
 
-    @PostMapping
-    private ResponseEntity<ApiResponse<PetQuery>> addPet(@RequestBody PetCommand petCommand) {
-        if(PetValidator.isInValid(petCommand)) {
+    @PostMapping("")
+    public ResponseEntity<ApiResponse<PetQuery>> savePet(@RequestBody PetCommand command) {
+        if(PetValidator.isInValid(command)) {
             return ApiConstant.BAD_REQUEST_API_RESPONSE_FN();
         }
-        PetQuery pet = petService.addPet(petCommand);
+        PetQuery pet = petService.addPet(command);
         return ResponseEntity.ok(new ApiResponse<>(pet));
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<PetQuery>>> getPets() {
-        PetQuery p1 = new PetQuery();
-        p1.setName("DOG1");
-        p1.setId(1);
-
-        PetQuery p2 = new PetQuery();
-        p2.setName("CAT1");
-        p2.setId(2);
-
-        List<PetQuery> res = new ArrayList<>();
-        res.add(p1);
-        res.add(p2);
-
-        return ResponseEntity.ok(new ApiResponse<>(res));
+    public ResponseEntity<ApiResponse<Set<PetQuery>>> getPets() {
+        Set<PetQuery> allPets = petService.getAllPets();
+        return ResponseEntity.ok(new ApiResponse<>(allPets));
     }
 }

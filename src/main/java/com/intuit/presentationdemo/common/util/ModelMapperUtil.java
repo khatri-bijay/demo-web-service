@@ -6,9 +6,6 @@ import com.intuit.presentationdemo.dto.command.VetCommand;
 import com.intuit.presentationdemo.dto.query.*;
 import org.modelmapper.ModelMapper;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 public final class ModelMapperUtil {
     private ModelMapperUtil() {}
     private static ModelMapper modelMapper = new ModelMapper();
@@ -38,22 +35,14 @@ public final class ModelMapperUtil {
     public static Vet toVet(final VetCommand command){
         Vet vet = new Vet();
         vet.setName(command.getName());
-        vet.setSpecialties(toSpecialties(command.getSpecialties()));
+        vet.setSpecialty(toSpecialty(command.getSpecialty()));
         return vet;
     }
 
-    private static Set<Specialty> toSpecialties(final Set<VetCommand.SpecialtyCommand> specialties) {
-        return specialties.stream().map(ModelMapperUtil::toSpecialty)
-                .collect(Collectors.toSet());
-    }
-
     public static VetQuery toVetQuery(final Vet vet) {
-        return modelMapper.map(vet, VetQuery.class);
+       return modelMapper.map(vet, VetQuery.class);
     }
 
-    public static SpecialtyQuery toSpecialtyQuery(final Specialty specialty) {
-        return modelMapper.map(specialty, SpecialtyQuery.class);
-    }
 
     public static Specialty toSpecialty(final VetCommand.SpecialtyCommand command) {
         Specialty specialty = new Specialty();

@@ -9,4 +9,5 @@ import java.util.Set;
 public interface PetService {
     Set<PetTypeQuery> getPetTypes();
     PetQuery addPet(PetCommand petCommand);
+    Set<PetQuery> getAllPets();
 }

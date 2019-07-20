@@ -24,11 +24,8 @@ import static org.mockito.Mockito.*;
 public class VetServiceTest {
     private VetRepository mockVetRepository;
     private SpecialtyRepository mockSpecialtyRepository;
-
     private Vet expectedVet;
-    private VetQuery expectedVetQuery;
     private VetCommand expectedCommand;
-    private Set<Specialty> expectedSpecialities;
 
     private VetService sut;
 
@@ -40,25 +37,19 @@ public class VetServiceTest {
 
         VetCommand.SpecialtyCommand sc1 = new VetCommand.SpecialtyCommand("Specialty1");
         VetCommand.SpecialtyCommand sc2 = new VetCommand.SpecialtyCommand("Specialty12");
-        Set<VetCommand.SpecialtyCommand> specialtyCommands = new HashSet<>();
-        specialtyCommands.add(sc1);
-        specialtyCommands.add(sc2);
 
         expectedCommand = new VetCommand();
         expectedCommand.setName("Vet1");
-        expectedCommand.setSpecialties(specialtyCommands);
+        expectedCommand.setSpecialty(sc1);
 
         Specialty s = new Specialty();
         s.setId(1);
         s.setName("ONE");
 
-        Set<Specialty> specialtySet = new HashSet<>();
-        specialtySet.add(s);
-
         expectedVet = new Vet();
         expectedVet.setId(111);
         expectedVet.setName("Name");
-        expectedVet.setSpecialties(specialtySet);
+        expectedVet.setSpecialty(s);
 
         Mockito.when(mockSpecialtyRepository.findByNameIgnoreCase(anyString()))
                 .thenReturn(Optional.of(s));
@@ -71,7 +62,7 @@ public class VetServiceTest {
     public void givenSpecialtyIsInvalid_throwsException(){
         Mockito.when(mockSpecialtyRepository.findByNameIgnoreCase(anyString()))
                 .thenReturn(Optional.empty());
-        expectedCommand.getSpecialties().add(new VetCommand.SpecialtyCommand("INVALID"));
+        expectedCommand.setSpecialty(new VetCommand.SpecialtyCommand("INVALID"));
 
         Assertions.assertThrows(ApiException.class, () -> sut.addVet(expectedCommand));
     }

@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name ="VETS")
@@ -17,6 +15,6 @@ public class Vet {
     private long id;
     private String name;
 
-    @OneToMany
-    private Set<Specialty> specialties = new HashSet<>();
+    @ManyToOne
+    private Specialty specialty; // Assumption # -- May not match real scenario ??
 }

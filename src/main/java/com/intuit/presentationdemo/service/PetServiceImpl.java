@@ -54,4 +54,11 @@ public class PetServiceImpl implements PetService {
         pet.setType(petType.get());
         return ModelMapperUtil.toPetQuery(petRepository.save(pet));
     }
+
+    @Override
+    public Set<PetQuery> getAllPets() {
+        return petRepository.findAll()
+                .parallelStream().map(ModelMapperUtil::toPetQuery)
+                .collect(Collectors.toSet());
+    }
 }
