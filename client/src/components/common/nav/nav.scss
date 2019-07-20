@@ -1,0 +1,43 @@
+@import '../../../assets/styles/app-color';
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-collapse {
+    color: #fff;
+    padding: .5rem;
+    position: absolute;
+    right: .5rem;
+    top: 0.5rem;
+    cursor: pointer;
+}
+
+.menu-item:nth-child(1) {
+    margin-top: 2.5rem;
+}
+
+.menu-item, .menu-item a{
+    padding: 1rem 0.25rem 1rem 1rem;
+    color: #fff;
+    text-decoration: none;
+    color: $primary_color;;
+}
+
+.menu-item:hover
+{
+    
+}
+
+.menu-item-active {
+    font-weight:bold;
+}
+
+.menu-container label{
+    display:none;  
+    padding:10px;
+    color:white;  
+    cursor:pointer; 
+  }
