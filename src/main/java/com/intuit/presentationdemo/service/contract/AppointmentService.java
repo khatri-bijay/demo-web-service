@@ -9,5 +9,8 @@ import java.util.List;
 public interface AppointmentService {
     AppointmentQuery scheduleAppointment(long petId, AppointmentCommand command);
     void cancelAppointment(long appointmentId);
-    List<AppointmentQuery> getAppointments(long vetId, Date date);
+    List<AppointmentQuery> getAppointmentsForVet(long vetId, Date date);
+    List<AppointmentQuery> getAppointmentsForVet(long vetId);
+    List<AppointmentQuery> getAppointmentsForPet(long petId, Date date);
+    List<AppointmentQuery> getAppointmentsForPet(long petId);
 }

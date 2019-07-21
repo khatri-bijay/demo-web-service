@@ -70,6 +70,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAppointmentStatus(BOOKED);
         appointment.setPet(pet.get());
         appointment.setVet(vet.get());
+        appointment.setStart(command.getStart());
+        appointment.setEnd(command.getEnd());
 
         Appointment newAppointment = appointmentRepository.save(appointment);
         eventPublisher.publish(new AppointmentCreatedEvent(appointment)); //TODO: Can be made non-blocking ?
@@ -78,6 +80,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private void checkConflict(Vet vet, Date date) {
         storeStatus();
+
         if(appointmentRepository.findByVetAndDateAndAppointmentStatus(vet, date, BOOKED)
                 .isPresent()) {
             throw new ApiException.Builder("Error: Conflict, Vet already has an existing appointment for " + date)
@@ -115,20 +118,64 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentQuery> getAppointments(long vetId, Date date) {
-        Optional<Vet> vet = vetRepository.findById(vetId);
-        if(!vet.isPresent()) {
-            throw new ApiException.Builder("Error: Vet not found.")
-                    .className(CLASS_NAME)
-                    .method("getAppointments")
-                    .errorCode(ApiConstant.RESOURCE_NOT_FOUND)
-                    .statusCode(HttpStatus.NOT_FOUND)
-                    .build();
-        }
+    public List<AppointmentQuery> getAppointmentsForVet(long vetId, Date date) {
+        Optional<Vet> vet = assertVetIsValid(vetId);
         Optional<Set<Appointment>> appointments = appointmentRepository.findByVetAndDate(vet.get(), date);
+        return buildAppointmentQueries(appointments);
+    }
+
+    private List<AppointmentQuery> buildAppointmentQueries(Optional<Set<Appointment>> appointments) {
         return appointments.map(appointmentSet -> Collections.unmodifiableList(appointmentSet.parallelStream()
                 .map(ModelMapperUtil::toAppointmentQuery)
                 .collect(Collectors.toList())))
                 .orElse(Collections.emptyList());
     }
+
+    private Optional<Vet> assertVetIsValid(long vetId) {
+        Optional<Vet> vet = vetRepository.findById(vetId);
+        if(!vet.isPresent()) {
+            throw new ApiException.Builder("Error: Vet not found.")
+                    .className(CLASS_NAME)
+                    .method("getAppointmentsForVet")
+                    .errorCode(ApiConstant.RESOURCE_NOT_FOUND)
+                    .statusCode(HttpStatus.NOT_FOUND)
+                    .build();
+        }
+        return vet;
+    }
+
+    @Override
+    public List<AppointmentQuery> getAppointmentsForVet(long vetId) {
+        Optional<Vet> vet = assertVetIsValid(vetId);
+        Optional<Set<Appointment>> appointments = appointmentRepository.findByVet(vet.get());
+        return buildAppointmentQueries(appointments);
+    }
+
+    @Override
+    public List<AppointmentQuery> getAppointmentsForPet(long petId, Date date) {
+        Optional<Pet> pet = assertPetIsValid(petId);
+        Optional<Set<Appointment>> appointments = appointmentRepository.findByPetAndDate(pet.get(), date);
+        return buildAppointmentQueries(appointments);
+    }
+
+    private Optional<Pet> assertPetIsValid(long petId) {
+        Optional<Pet> pet = petRepository.findById(petId);
+        if(!pet.isPresent()) {
+            throw new ApiException.Builder("Error: Pet not found.")
+                    .className(CLASS_NAME)
+                    .method("getAppointmentsForPet")
+                    .errorCode(ApiConstant.RESOURCE_NOT_FOUND)
+                    .statusCode(HttpStatus.NOT_FOUND)
+                    .build();
+        }
+        return pet;
+    }
+
+    @Override
+    public List<AppointmentQuery> getAppointmentsForPet(long petId) {
+        Optional<Pet> pet = assertPetIsValid(petId);
+        Optional<Set<Appointment>> appointments = appointmentRepository.findByPet(pet.get());
+        return buildAppointmentQueries(appointments);
+    }
+
 }

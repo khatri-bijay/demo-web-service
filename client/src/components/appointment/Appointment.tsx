@@ -1,29 +1,25 @@
 import * as React from 'react';
 
-import Dropdown from '../common/Dropdown';
-import { Grid, Button } from '@material-ui/core';
-import Slot from './Slot';
-
+import { IPet, IVet, IAppointment } from '../common/contract/contract';
+import BookAppointment from './BookAppointment';
 import appointmentService from '../../service/appointment-service';
-import { ISlot, IPet, IVet, IAppointment } from '../common/contract/contract';
-import AppointmentDate from './AppointmentDate';
-import { vetService } from '../../service/vet-service';
+import AppointmentListItem from './AppointmentList';
+import Search from '../common/Search';
 
 export interface IAppointmentProps {
 	location: {
-		appointmentProps: IPet
+		appointmentProps: {
+			vet: IVet,
+			pet: IPet
+		}
 	}
 }
 
 export interface IAppointmentState {
-	availableSlot: any;
-	vets: IVet[];
-	isLoading: boolean;
+	pet: IPet;
+	vet: IVet;
+	appointments:any;
 	isError: boolean;
-	appointment: IAppointment;
-	selectedVet: any;
-	selectedPet: any;
-	date: Date,
 }
 
 export default class Appointment extends React.Component<IAppointmentProps, IAppointmentState> {
@@ -31,111 +27,54 @@ export default class Appointment extends React.Component<IAppointmentProps, IApp
 		super(props);
 		console.log('Appointment Props', props.location.appointmentProps);
 		this.state = {
-			date: null,
-			vets: [],
-			isLoading: true,
-			isError: false,
-			appointment: null,
-			availableSlot: [],
-			selectedVet: null,
-			selectedPet: props.location.appointmentProps
+			vet: props.location.appointmentProps && props.location.appointmentProps.vet,
+			pet: props.location.appointmentProps && props.location.appointmentProps.pet,
+			appointments : [],
+			isError: false
 		};
-
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleSelectChange = this.handleSelectChange.bind(this);
-		this.handleDateChange = this.handleDateChange.bind(this);
-		this.scheduleHandler = this.scheduleHandler.bind(this);
-	}
-
-	public componentDidMount() {
-		vetService.getVets()
-			.then(vets => this.setState({ vets, isLoading: false, selectedVet: vets[0] }));
-	}
-
-	private loadSlots(vetId: number, date: Date) {
-		appointmentService.getSlots(vetId, date)
-			.then((slot: ISlot) => {
-				console.log("Slots", slot);
-				this.setState({
-					availableSlot: slot.slots,
-					isLoading: false
-				});
-			});
-	}
-
-	public cancelHandler() {
-
-	}
-
-	public scheduleHandler() {
-		let appointment : IAppointment = {
-			date: new Date(),
-			petId: this.state.selectedPet.id,
-			vet: this.state.selectedVet,
-			id: 0
-		}
-		console.log('Appointment', appointment);
-		appointmentService.addAppointment(appointment)
-		.then(() => console.log('Appointment added successfully'));
+		this.handleSchedule = this.handleSchedule.bind(this);
 	}
 
 	public render() {
-		if (this.state.isLoading) {
-			return <p>Loading ...</p>;
+		let elem, title;
+		if (!!this.state.vet) {
+			title = <h4> Available Appointments </h4>;
+			elem = this.state.appointments.map((appointment, index) => <AppointmentListItem key= {index} Appointment = {appointment} />;
+		} else if(!!this.state.pet) {
+			elem = <BookAppointment pet = {this.state.pet} onSchedule= { this.handleSchedule } />
 		}
-
+		else elem = <h2>Nothing here</h2>;
+		if(this.state.isError) {
+			title = <div className='appointment-conflict-error'> Appointment can't be scheduled.</div>;
+		}
 		return (
-			<form method="Post" onSubmit={event => event.preventDefault()}>
-				<Grid container direction="column">
-					<Grid item>
-						<h3>Book an Appoinement for {this.state.selectedPet.name} </h3>
-					</Grid>
-					<Grid item container direction="row" justify="space-between" alignItems="center">
-						<Grid item>
-							Choose a Date: <AppointmentDate handleDateChange={this.handleDateChange}></AppointmentDate>
-						</Grid>
-
-						<Grid item>
-							<Dropdown selectedDefault={this.state.selectedVet} name={'Vets'} options={this.state.vets} handlePetChange={this.handleSelectChange}></Dropdown>
-						</Grid>
-					</Grid>
-					<Grid item>
-						<Slot slots={this.state.availableSlot}></Slot>
-					</Grid>
-					<Grid item>
-						<Grid container direction="row" justify="space-between" className="schedule-appointment-form__footer">
-							<Button variant="contained" onClick={this.cancelHandler}>Cancel</Button>
-							<Button variant="contained" onClick={this.scheduleHandler}>Schedule Now</Button>
-						</Grid>
-					</Grid>
-				</Grid>
-			</form>
-		);
+			<div className="appointment-container">
+				{ title }
+				<Search />
+				{ elem }
+			</div>)
 	}
 
-	private handleDateChange(e) {
-		const selectedDate = e.target.value;
-		this.setState({
-			appointment: {
-				...this.state.appointment,
-				date: selectedDate
-			}
-		});
+	public handleSchedule(appointment: IAppointment) {
+		appointmentService.addAppointment(appointment)
+    		.then(() => {
+				this.setState({ isError: false});
+			}).catch(() => {
+				this.setState({ isError: true});
+			});
 	}
 
-	private handleSubmit(e: Event) {
-		e.preventDefault();
-		console.log('submit', this.state.appointment)
+	public componentDidMount() {
+		if(!!this.state.vet) {
+			this.getAppointments(this.state.vet.id);
+		}
 	}
 
-	private handleSelectChange(e) {
-		const selectedVet = e.target.value;
-		this.setState({
-			appointment: {
-				...this.state.appointment
-			},
-			selectedVet: selectedVet
-		});
-		this.loadSlots(selectedVet.id, new Date('2012-09-04'));
+	private getAppointments(vetId: number) {
+		appointmentService.getVetAppointments(vetId)
+		    .then(appointments => {
+				console.log("Appointments", appointments);
+				this.setState({ appointments });
+			});
+		}
 	}
-}

@@ -63,6 +63,8 @@ public final class ModelMapperUtil {
         query.setId(appointment.getId());
         query.setDate(appointment.getDate());
         query.setPet(toPetQuery(appointment.getPet()));
+        query.setStart(appointment.getStart());
+        query.setEnd(appointment.getEnd());
         VetQuery vetQuery = new VetQuery();
         vetQuery.setId(appointment.getVet().getId());
         vetQuery.setName(appointment.getVet().getName());

@@ -5,6 +5,7 @@ import com.intuit.presentationdemo.common.ApiResponse;
 import com.intuit.presentationdemo.common.validator.PetValidator;
 import com.intuit.presentationdemo.dto.command.PetCommand;
 import com.intuit.presentationdemo.dto.query.PetQuery;
+import com.intuit.presentationdemo.dto.query.PetTypeQuery;
 import com.intuit.presentationdemo.service.contract.PetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,12 @@ public class PetsController {
     @GetMapping("")
     public ResponseEntity<ApiResponse<Set<PetQuery>>> getPets() {
         Set<PetQuery> allPets = petService.getAllPets();
+        return ResponseEntity.ok(new ApiResponse<>(allPets));
+    }
+
+    @GetMapping("types")
+    public ResponseEntity<ApiResponse<Set<PetTypeQuery>>> getPetTypes() {
+        Set<PetTypeQuery> allPets = petService.getPetTypes();
         return ResponseEntity.ok(new ApiResponse<>(allPets));
     }
 }

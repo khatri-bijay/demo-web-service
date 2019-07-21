@@ -10,8 +10,9 @@ export interface INameId {
     name: String;
 }
 export interface ISpecialty extends INameId{}
+export interface IType extends INameId{}
 export interface IPet extends INameId {
-    type: INameId;
+    type: IType;
  }
 export interface IVet extends INameId { 
     specialty: ISpecialty
@@ -29,6 +30,8 @@ export interface ISlotItem {
 export interface IAppointment {
     id: number;
     date: Date;
-    petId: number;
-    vet: IVet;
+    pet: INameId,
+    vet: INameId;
+    start: String, 
+    end: String
 }

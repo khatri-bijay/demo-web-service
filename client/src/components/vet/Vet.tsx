@@ -4,8 +4,9 @@ import { IVet } from '../common/contract/contract';
 import VetListItem from './VetListItem';
 import AddVet from './AddVet';
 import Search from '../common/Search';
-import { Fab } from '@material-ui/core';
+import { Fab, Button, Icon } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import { NavLink } from 'react-router-dom';
 
 import './vet.scss';
 
@@ -32,7 +33,6 @@ export default class Vet extends React.Component<IVetProps, IVetState> {
 	}
 
 	public handleAdd(vet: IVet) {
-		let vets = this.state.vets;
 		vetService.addVet(vet)
 		.then(vet => {
 			this.setState({
@@ -40,10 +40,8 @@ export default class Vet extends React.Component<IVetProps, IVetState> {
 			});
 			this.getVets();
 		})
-
     }
 	
-
 	public handleCancel() {
 		this.setState({
 			isFormVisible: false
@@ -57,7 +55,13 @@ export default class Vet extends React.Component<IVetProps, IVetState> {
 	}
 
 	public render() {
-		const vetList = this.state.vets.map((v, index) => <VetListItem key= {index} vet = {v} />)
+		const vetList = this.state.vets.map((vet, index) => <VetListItem key= {index} vet = {vet}>
+			<NavLink to={{ pathname: '/appointment', appointmentProps: {vet}}}>
+					<Button variant="outlined" className="book-appointment-button">
+						<Icon>list</Icon>view Appointment
+					</Button>
+			</NavLink>
+		</VetListItem>)
 		let addVet
 		if(this.state.isFormVisible) {
 			addVet = <AddVet onAdd = { this.handleAdd } onCancel = {this.handleCancel} />;

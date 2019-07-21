@@ -1,25 +1,22 @@
-import { loggerService } from './logger-service';
-import apiConfig from '../config/app.config';
-import { IApiResponse as ApiResponse, ISlot as Slot, IAppointment } from '../components/common/contract/contract';
+import { IAppointment } from '../components/common/contract/contract';
+import HttpBaseClient from './http-base-service';
 
-const baseApi = apiConfig.apiBase;
+const appointmentHttpClient = new HttpBaseClient();
+const createCommand = function(appointment) {
+    return {
+        "date": appointment.date,
+        "vet": {
+          "id": appointment.vet.id
+        },
+        "start": appointment.start,
+        "end": appointment.start
+      }
+}
 
 const appointmentService = {
-    getSlots: (vetId: number, date: Date) => fetch(`${baseApi}/vets/${vetId}/appointments/slots?date=${date}`)
-                        .then(res => res.json())
-                        .then((res: ApiResponse<Slot>) => res.data)
-                        .catch(error => loggerService.log(error)),
-    addAppointment: (appoinment:IAppointment) =>  fetch(`${baseApi}/pets/${appoinment.petId}/appointments`, {
-        method: 'post',
-        body: JSON.stringify(appoinment),
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    })
-        .then(res => res.json())
-        .then(res => res.data)
-        .catch(error => loggerService.log(error))
+    getSlots: (vetId: number, date: Date) => appointmentHttpClient.get(`vets/${vetId}/appointments/slots?date=${date}`),
+    addAppointment: (appoinment:IAppointment) =>  appointmentHttpClient.post(`pets/${appoinment.pet.id}/appointments`, createCommand(appoinment)),
+    getVetAppointments: (vetId: number) => appointmentHttpClient.get(`vets/${vetId}/appointments`)
 }
 
 export default appointmentService;

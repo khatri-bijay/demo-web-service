@@ -5,6 +5,33 @@
     margin-bottom: .5rem;
     color: #636363;
     background: white;
-    padding: 1rem;
+    padding: .5rem;
     box-shadow: 1px 5px 13px 0px #e2e2e2;
+}
+
+.schedule-appointment-form__footer {
+    margin-top: 1rem;
+}
+
+.appointment-conflict-error {
+    color: #ce4f4f;
+    background: #ffcece;
+    padding: .5rem;
+    font-size: 1.2rem;
+}
+
+.book-appointment-form {
+    background: #fff;
+    padding: .5rem;
+}
+
+.book-appointment-title {
+    text-transform: uppercase;
+    color: #616161;
+    background: #dadada;
+    padding: 1rem;
+}
+
+.appointment-date-picker {
+    margin-top: 1rem;
 }

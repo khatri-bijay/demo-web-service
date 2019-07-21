@@ -53,12 +53,12 @@ public class AppointmentServiceTest {
 
         when(mockVetRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
-        Assertions.assertThrows(ApiException.class, () -> sut.getAppointments(0, new Date()));
+        Assertions.assertThrows(ApiException.class, () -> sut.getAppointmentsForVet(0, new Date()));
     }
 
     @Test
     public void givenVetIsValid_returnsEmptyListForGetAppointments() {
-        List<AppointmentQuery> actual = sut.getAppointments(1, new Date());
+        List<AppointmentQuery> actual = sut.getAppointmentsForVet(1, new Date());
 
         Assertions.assertEquals(Collections.emptyList(), actual);
 
@@ -69,7 +69,7 @@ public class AppointmentServiceTest {
         when(mockAppointmentRepository.findByVetAndDate(any(Vet.class), any(Date.class)))
                 .thenReturn(Optional.of(TestUtils.expectedAppointmentSet()));
 
-        List<AppointmentQuery> actual = sut.getAppointments(1, new Date());
+        List<AppointmentQuery> actual = sut.getAppointmentsForVet(1, new Date());
         Assertions.assertEquals(TestUtils.expectedAppointmentSet().size(), actual.size());
 
     }

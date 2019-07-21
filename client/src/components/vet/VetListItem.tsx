@@ -26,6 +26,7 @@ export default class VetListItem extends React.Component<IVetListItemProps, IVet
         <Grid item>{this.props.vet.name}</Grid>
         <Grid item>{this.props.vet.specialty.name}</Grid>
         <Grid item>
+          {this.props.children}&nbsp;&nbsp;
           <Button variant="outlined">Edit</Button>&nbsp;&nbsp;
           <Button variant="outlined" color="secondary">Delete</Button>
         </Grid>

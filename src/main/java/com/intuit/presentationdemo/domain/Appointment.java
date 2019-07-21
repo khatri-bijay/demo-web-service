@@ -14,8 +14,11 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date date;
+
+    private String start;
+    private String end;
 
     @ManyToOne
     private Vet vet;

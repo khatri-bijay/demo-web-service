@@ -13,4 +13,7 @@ import java.util.Set;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     Optional<Set<Appointment>> findByVetAndDate(Vet pet, Date date);
     Optional<Set<Appointment>> findByVetAndDateAndAppointmentStatus(Vet pet, Date date, AppointmentStatus status);
+    Optional<Set<Appointment>> findByPetAndDate(Pet pet, Date date);
+    Optional<Set<Appointment>> findByVet(Vet vet);
+    Optional<Set<Appointment>> findByPet(Pet vet);
 }

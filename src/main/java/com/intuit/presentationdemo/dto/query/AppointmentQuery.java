@@ -13,5 +13,7 @@ public class AppointmentQuery {
     private Date date;
     private VetQuery vet;
     private PetQuery pet;
+    private String start;
+    private String end;
     private AppointmentStatusQuery appointmentStatus;
 }
