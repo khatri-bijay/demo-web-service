@@ -40,8 +40,8 @@ export default class BookAppointment extends React.Component<IBookAppointmentPro
     }
 
 
-    private handleDateChange(e) {
-        const selectedDate = e.target.value;
+    private handleDateChange(date) {
+        const selectedDate = date;
         this.setState({
             appointment: {
                 ...this.state.appointment,

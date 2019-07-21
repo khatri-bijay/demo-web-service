@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button/index';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel/index';
-import { ISpecialty } from '../common/contract/contract';
 import { vetService } from '../../service/vet-service';
 
 import './vet.scss';
@@ -17,7 +16,7 @@ export interface IAddVetProps {
 export interface IAddVetState {
 	name: string,
 	specialty: string,
-	specialties: ISpecialty[]
+	specialties: any[]
 }
 
 export default class AddVet extends React.Component<IAddVetProps, IAddVetState> {
@@ -109,7 +108,7 @@ export default class AddVet extends React.Component<IAddVetProps, IAddVetState> 
 
 	public componentDidMount() {
 		vetService.getSpecialties()
-		.then(specialties => this.setState({specialties}));
+		.then((specialties: any[]) => this.setState({specialties}));
 	}
 }
 

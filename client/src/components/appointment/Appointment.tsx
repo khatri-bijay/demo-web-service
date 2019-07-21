@@ -39,7 +39,7 @@ export default class Appointment extends React.Component<IAppointmentProps, IApp
 		let elem, title;
 		if (!!this.state.vet) {
 			title = <h4> Available Appointments </h4>;
-			elem = this.state.appointments.map((appointment, index) => <AppointmentListItem key= {index} Appointment = {appointment} />;
+			elem = this.state.appointments.map((appointment, index) => <AppointmentListItem key= {index} Appointment = {appointment} />);
 		} else if(!!this.state.pet) {
 			elem = <BookAppointment pet = {this.state.pet} onSchedule= { this.handleSchedule } />
 		}

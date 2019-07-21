@@ -14,3 +14,10 @@ Build and Run Process
     a) npm install 
     b) npm run build
     c) npm start (note: it's a webpack dev server on port 9000)
+
+Improvements: 
+   1. Authentication for both client and Rest API
+   2. Rest hateoas, paging and filtering and or GraphQL
+   2. Timing metrics in Rest API
+   3. Redux integration
+   

@@ -95,7 +95,7 @@ export default class Pet extends React.Component<IPetProps, IPetState> {
 
 	private getPets() {
 		PetService.getPets()
-			.then(respone => {
+			.then((respone: any) => {
 				this.setState({
 					pets: respone,
 					isLoading: false

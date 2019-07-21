@@ -14,7 +14,7 @@ export interface IVetProps {
 }
 
 export interface IVetState {
-	vets : IVet[];
+	vets : any[];
 	isFormVisible: boolean;
 }
 
@@ -87,6 +87,6 @@ export default class Vet extends React.Component<IVetProps, IVetState> {
 
 	private getVets() {
 		vetService.getVets()
-			.then(vets => this.setState({ vets: vets }));
+			.then((vets: any[]) => this.setState({ vets: vets }));
 	}
 }

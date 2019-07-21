@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button/index';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel/index';
-import { IType } from '../common/contract/contract';
 import { PetService }  from '../../service/Pet-service';
 
 import './pet.scss';
@@ -17,7 +16,7 @@ export interface IAddPetProps {
 export interface IAddPetState {
 	name: string,
 	type: string,
-	types: IType[]
+	types: any;
 }
 
 export default class AddPet extends React.Component<IAddPetProps, IAddPetState> {
