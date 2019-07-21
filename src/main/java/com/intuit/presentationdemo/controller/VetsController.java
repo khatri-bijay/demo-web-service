@@ -3,7 +3,9 @@ package com.intuit.presentationdemo.controller;
 import com.intuit.presentationdemo.common.ApiConstant;
 import com.intuit.presentationdemo.common.ApiResponse;
 import com.intuit.presentationdemo.common.validator.VetValidator;
+import com.intuit.presentationdemo.domain.Specialty;
 import com.intuit.presentationdemo.dto.command.VetCommand;
+import com.intuit.presentationdemo.dto.query.SpecialtyQuery;
 import com.intuit.presentationdemo.dto.query.VetQuery;
 import com.intuit.presentationdemo.service.contract.VetService;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +41,12 @@ public class VetsController {
         }
 
         return ResponseEntity.ok(new ApiResponse<>(response));
+    }
+
+    @GetMapping("specialties")
+    public ResponseEntity<ApiResponse<Set<SpecialtyQuery>>> getSpecialties() {
+        Set<SpecialtyQuery> specialties = vetService.getSpecialties();
+        return ResponseEntity.ok(new ApiResponse<>(specialties));
+
     }
 }

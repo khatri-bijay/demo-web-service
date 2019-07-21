@@ -49,8 +49,10 @@ module.exports = {
     new HtmlWebpackPlugin({template: 'src/index.html'}),
   ],
   devServer: {
+    historyApiFallback: true,
     contentBase: resolve(__dirname, 'dist'),
     compress: true,
     port: 9000
-  }
+  },
+  devtool: 'source-map'
 };

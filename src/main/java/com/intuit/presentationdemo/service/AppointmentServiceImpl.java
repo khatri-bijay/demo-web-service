@@ -20,8 +20,8 @@ import com.intuit.presentationdemo.service.contract.AppointmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -112,5 +112,23 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         appointmentRepository.delete(appointment.get());
         eventPublisher.publish(new AppointmentCancelledEvent(appointment));
+    }
+
+    @Override
+    public List<AppointmentQuery> getAppointments(long vetId, Date date) {
+        Optional<Vet> vet = vetRepository.findById(vetId);
+        if(!vet.isPresent()) {
+            throw new ApiException.Builder("Error: Vet not found.")
+                    .className(CLASS_NAME)
+                    .method("getAppointments")
+                    .errorCode(ApiConstant.RESOURCE_NOT_FOUND)
+                    .statusCode(HttpStatus.NOT_FOUND)
+                    .build();
+        }
+        Optional<Set<Appointment>> appointments = appointmentRepository.findByVetAndDate(vet.get(), date);
+        return appointments.map(appointmentSet -> Collections.unmodifiableList(appointmentSet.parallelStream()
+                .map(ModelMapperUtil::toAppointmentQuery)
+                .collect(Collectors.toList())))
+                .orElse(Collections.emptyList());
     }
 }

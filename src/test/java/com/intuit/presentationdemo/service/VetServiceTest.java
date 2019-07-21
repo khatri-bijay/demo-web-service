@@ -1,5 +1,6 @@
 package com.intuit.presentationdemo.service;
 
+import com.intuit.presentationdemo.TestUtils;
 import com.intuit.presentationdemo.common.exception.ApiException;
 import com.intuit.presentationdemo.domain.Specialty;
 import com.intuit.presentationdemo.domain.Vet;
@@ -36,23 +37,15 @@ public class VetServiceTest {
         sut = new VetServiceImpl(mockVetRepository, mockSpecialtyRepository);
 
         VetCommand.SpecialtyCommand sc1 = new VetCommand.SpecialtyCommand("Specialty1");
-        VetCommand.SpecialtyCommand sc2 = new VetCommand.SpecialtyCommand("Specialty12");
 
         expectedCommand = new VetCommand();
         expectedCommand.setName("Vet1");
         expectedCommand.setSpecialty(sc1);
 
-        Specialty s = new Specialty();
-        s.setId(1);
-        s.setName("ONE");
-
-        expectedVet = new Vet();
-        expectedVet.setId(111);
-        expectedVet.setName("Name");
-        expectedVet.setSpecialty(s);
+        expectedVet = TestUtils.expectedVet();
 
         Mockito.when(mockSpecialtyRepository.findByNameIgnoreCase(anyString()))
-                .thenReturn(Optional.of(s));
+                .thenReturn(Optional.of(TestUtils.expectedSpeciality()));
 
         Mockito.when(mockVetRepository.save(any(Vet.class)))
                 .thenReturn(expectedVet);

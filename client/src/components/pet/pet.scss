@@ -1,0 +1,13 @@
+@import '../../assets/styles/app-color';
+
+.pet-list-item{
+    padding: .5rem;
+    border-bottom: 1px solid #f3f3f3;
+    & a {
+        text-decoration: none;
+    }
+}
+
+.pet-list-item--padding-top {
+    padding-top: 10px;
+}

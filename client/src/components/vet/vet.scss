@@ -1,0 +1,39 @@
+@import '../../assets/styles/app-color';
+.vet-list-item{
+    padding: .5rem;
+    border-bottom: 1px solid $soft-white;
+    & a {
+        text-decoration: none;
+    }
+}
+
+.add-vet {
+    margin-top: 1rem;
+}
+.add-vet-form {
+    background: $soft-white;
+    &__input {
+        padding: .5rem;
+    }
+}
+.add-vet-form__title
+{
+    text-transform: uppercase;
+    color: #616161;
+    background: #dadada;
+    padding: 1rem;
+}
+.add-vet-form__footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem .5rem;
+}
+
+.add-vet-form__speciality-select {
+    margin-top: 1rem;
+}
+
+.add-vet-form__name {
+    margin-top: -.5rem;
+}

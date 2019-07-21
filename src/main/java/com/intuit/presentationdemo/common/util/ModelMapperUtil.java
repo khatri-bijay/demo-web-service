@@ -43,7 +43,9 @@ public final class ModelMapperUtil {
        return modelMapper.map(vet, VetQuery.class);
     }
 
-
+    public static SpecialtyQuery toSpecialtyQuery(final Specialty specialty) {
+        return modelMapper.map(specialty, SpecialtyQuery.class);
+    }
     public static Specialty toSpecialty(final VetCommand.SpecialtyCommand command) {
         Specialty specialty = new Specialty();
         if(command != null) {

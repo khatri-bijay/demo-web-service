@@ -1,5 +1,6 @@
 package com.intuit.presentationdemo.service;
 
+import com.intuit.presentationdemo.TestUtils;
 import com.intuit.presentationdemo.common.exception.ApiException;
 import com.intuit.presentationdemo.common.util.ModelMapperUtil;
 import com.intuit.presentationdemo.domain.Pet;
@@ -38,10 +39,7 @@ public class PetServiceTest {
         mockPetTypeRepository = mock(PetTypeRepository.class);
         sut = new PetServiceImpl(mockPetTypeRepository, mockPetRepository);
 
-        PetType expectedPetType = new PetType();
-        expectedPetType.setId(1);
-        expectedPetType.setName("EXPECTED");
-
+        PetType expectedPetType = TestUtils.expectedPetType();
         PetType expectedPetType2 = new PetType();
         expectedPetType2.setId(2);
         expectedPetType2.setName("EXPECTED2");
